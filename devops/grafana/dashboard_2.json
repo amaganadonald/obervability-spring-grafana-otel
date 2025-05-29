@@ -1,0 +1,91 @@
+{
+  "dashboard": {
+    "title": "Performance du Système",
+    "timezone": "UTC",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Utilisation CPU",
+        "targets": [
+          {
+            "target": "cpu_usage"
+          }
+        ],
+        "xaxis": {
+          "mode": "time",
+          "name": "Temps"
+        },
+        "yaxis": {
+          "label": "Utilisation CPU (%)"
+        }
+      },
+      {
+        "type": "graph",
+        "title": "Utilisation de la Mémoire",
+        "targets": [
+          {
+            "target": "memory_usage"
+          }
+        ],
+        "xaxis": {
+          "mode": "time",
+          "name": "Temps"
+        },
+        "yaxis": {
+          "label": "Utilisation Mémoire (Go)"
+        }
+      },
+      {
+        "type": "graph",
+        "title": "Température du Système",
+        "targets": [
+          {
+            "target": "system_temperature"
+          }
+        ],
+        "xaxis": {
+          "mode": "time",
+          "name": "Temps"
+        },
+        "yaxis": {
+          "label": "Température (°C)"
+        }
+      },
+      {
+        "type": "graph",
+        "title": "Utilisation du Disque",
+        "targets": [
+          {
+            "target": "disk_usage"
+          }
+        ],
+        "xaxis": {
+          "mode": "time",
+          "name": "Temps"
+        },
+        "yaxis": {
+          "label": "Utilisation Disque (%)"
+        }
+      },
+      {
+        "type": "graph",
+        "title": "Utilisation du Réseau",
+        "targets": [
+          {
+            "target": "network_usage"
+          }
+        ],
+        "xaxis": {
+          "mode": "time",
+          "name": "Temps"
+        },
+        "yaxis": {
+          "label": "Utilisation Réseau (Mo/s)"
+        }
+      }
+    ],
+    "refresh": "10s",
+    "schemaVersion": 16,
+    "version": 1
+  }
+}
