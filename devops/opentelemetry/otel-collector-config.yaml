@@ -8,10 +8,10 @@ receivers:
       endpoint: "0.0.0.0:9464"
 
     loki:
-      endpoint: http://loki:3100/loki/api/v1/push
+      endpoint: "http://loki:3100/loki/api/v1/push"
 
     tempo:
-      endpoint: tempo:4317
+      endpoint: "tempo:4317"
       tls:
         insecure: true
 
