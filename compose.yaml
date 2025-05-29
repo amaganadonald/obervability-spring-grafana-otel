@@ -1,0 +1,86 @@
+services:
+  #zipkin:
+  #  image: 'openzipkin/zipkin:latest'
+  #  ports:
+  #    - '9411:9411'
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./devops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+
+  tempo:
+    image: grafana/tempo
+    container_name: tempo
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./devops/tempo/tempo.yml:/etc/tempo.yaml:ro
+      - ./devops/tempo/tempo-data:/tmp/tempo
+    ports:
+      - "3200:3200"
+      - "9411:9411"
+      - "4317:4317"
+
+  loki:
+    image: grafana/loki:main
+    container_name: loki
+    command: [ "-config.file=/etc/loki/local-config.yaml"]
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki-data:/loki
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    #links:
+    #  - prometheus:prometheus
+    volumes:
+      - ./devops/grafana:/etc/grafana/provisioning/datasources:ro
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+  product-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: product-service
+    ports:
+      - "8081:8081"
+    restart: always
+    depends_on:
+      - tempo
+      - loki
+      - postgresql
+
+  postgresql:
+    image: postgres:17-alpine
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    volumes:
+      - type: tmpfs
+        target: /dev/shm
+        tmpfs:
+         size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: product-db
+    ports:
+      - "5432:5432"
+
+
+volumes:
+  tempo-data:
+  prometheus-data:
+  loki-data:
